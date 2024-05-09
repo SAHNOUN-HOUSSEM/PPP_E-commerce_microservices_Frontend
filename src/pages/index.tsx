@@ -5,13 +5,14 @@ import { Home } from "./home";
 import { Login } from "./login";
 import { Resgister } from "./register";
 import { Shop } from "./shop";
-import { Product } from "./product";
+// import { Product } from "./product";
 import { AboutUs } from "./about-us";
 import { ContactUs } from "./contact-us";
 import { Profile } from "./profile";
 import { OrderHistory } from "./order-history";
 import { Cart } from "./cart";
 import { Wishlist } from "./wishlist";
+import { Categories } from "./categories";
 
 export const Router = () => {
   return (
@@ -24,7 +25,7 @@ export const Router = () => {
           <Route path="/register" element={<Resgister />} />
 
           <Route path="/shop" element={<Shop />} />
-          <Route path="/products/:id" element={<Product />} />
+          <Route path="/categorie" element={<Categories />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />
 

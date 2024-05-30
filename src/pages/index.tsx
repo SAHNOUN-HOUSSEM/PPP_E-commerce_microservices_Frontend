@@ -13,6 +13,7 @@ import { OrderHistory } from "./order-history";
 import { Cart } from "./cart";
 import { Wishlist } from "./wishlist";
 import { Categories } from "./categories";
+import { Product, ProductItem } from "./product";
 
 export const Router = () => {
   return (
@@ -26,6 +27,9 @@ export const Router = () => {
 
           <Route path="/shop" element={<Shop />} />
           <Route path="/categorie" element={<Categories />} />
+          <Route path="/categorie/:id/products" element={<Product />}>
+            <Route path=":productid" element={<ProductItem />} />
+          </Route>
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />
 

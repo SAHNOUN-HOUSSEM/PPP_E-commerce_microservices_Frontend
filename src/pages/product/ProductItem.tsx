@@ -67,19 +67,10 @@ export function ProductItem() {
 
   const handleCLose = () => {
     setOpen(false);
-
     navigate(-1);
   };
 
   const handleAddToCart = () => {
-    // const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    // console.log(cart);
-    // if (!cart.includes(productid)) {
-    //   cart.push(productid);
-    //   localStorage.setItem("cart", JSON.stringify(cart));
-    // }
-    // console.log(typeof productid);
-
     addToCart(productid);
     handleCLose();
   };

@@ -2,16 +2,20 @@ import { createContext, useEffect, useState } from "react";
 
 interface CartContextProps {
   cart: string[];
+  open: boolean;
   addToCart: (item: string) => void;
   removeFromCart: (item: string) => void;
   clearCart: () => void;
+  setOpen: (open: boolean) => void;
 }
 
 export const CartContext = createContext<CartContextProps>({
   cart: [],
+  open: false,
   addToCart: () => {},
   removeFromCart: () => {},
   clearCart: () => {},
+  setOpen: () => {},
 });
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
@@ -20,6 +24,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     // @ts-expect-error
     JSON.parse(localStorage.getItem("cart")) || []
   );
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -32,7 +37,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const removeFromCart = (item: string) => {
-    setCart(cart?.filter((i) => i !== item));
+    setCart(cart.filter((i) => i !== item));
   };
 
   const clearCart = () => {
@@ -41,7 +46,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, clearCart }}
+      value={{ cart, addToCart, removeFromCart, clearCart, open, setOpen }}
     >
       {children}
     </CartContext.Provider>

@@ -3,6 +3,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { CartContext } from "../context";
+import { Shop } from "../pages/shop";
 
 const user = {
   name: "Tom Cook",
@@ -28,7 +29,7 @@ function classNames(...classes: string[]) {
 }
 
 export function Navbar() {
-  const { cart } = useContext(CartContext);
+  const { cart, setOpen } = useContext(CartContext);
 
   return (
     <>
@@ -70,6 +71,7 @@ export function Navbar() {
                       <button
                         type="button"
                         className="relative ml-3 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 mr-2"
+                        onClick={() => setOpen(true)}
                       >
                         <span className="absolute top-0 right-4 inline-block px-2 py-1 text-xs font-semibold leading-none bg-red-500 text-white rounded-full ml-16">
                           {cart?.length}
@@ -224,6 +226,7 @@ export function Navbar() {
             </>
           )}
         </Disclosure>
+        <Shop />
       </div>
     </>
   );

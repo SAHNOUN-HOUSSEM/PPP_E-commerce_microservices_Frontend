@@ -33,7 +33,7 @@ export function Navbar() {
   return (
     <>
       <div className="min-h-full">
-        <Disclosure as="nav" className="bg-gray-800">
+        <Disclosure as="nav" className="bg-gray-800 w-full fixed z-10">
           {({ open }) => (
             <>
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -83,24 +83,30 @@ export function Navbar() {
                           />
                         </svg>
                       </button>
-                      <Link
+                      {/* Here the button to login  */}
+
+                      {/* <Link
                         to="/login"
                         className="relative rounded bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 "
                       >
                         <span>Login</span>
-                      </Link>
-                      {/* <button
+                      </Link> */}
+
+                      {/* here the notification and the badge of the admin if exist */}
+
+                      {/* notification button  */}
+                      <button
                         type="button"
                         className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                       >
                         <span className="absolute -inset-1.5" />
                         <span className="sr-only">View notifications</span>
                         <BellIcon className="h-6 w-6" aria-hidden="true" />
-                      </button> */}
+                      </button>
 
                       {/* Profile dropdown */}
 
-                      {/* <Menu as="div" className="relative ml-3">
+                      <Menu as="div" className="relative ml-3">
                         <div>
                           <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                             <span className="absolute -inset-1.5" />
@@ -110,8 +116,12 @@ export function Navbar() {
                               src={user.imageUrl}
                               alt=""
                             />
+                            <span className="inline-flex items-center rounded-md bg-gray-900 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10 ml-2">
+                              Admin
+                            </span>
                           </Menu.Button>
                         </div>
+
                         <Transition
                           as={Fragment}
                           enter="transition ease-out duration-100"
@@ -139,7 +149,7 @@ export function Navbar() {
                             ))}
                           </Menu.Items>
                         </Transition>
-                      </Menu> */}
+                      </Menu>
                     </div>
                   </div>
                   <div className="-mr-2 flex md:hidden">

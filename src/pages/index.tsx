@@ -1,11 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Missing } from "./Missing";
 import { Layout } from "../layouts";
 import { Home } from "./home";
 import { Login } from "./login";
 import { Resgister } from "./register";
 import { Shop } from "./shop";
-// import { Product } from "./product";
 import { AboutUs } from "./about-us";
 import { ContactUs } from "./contact-us";
 import { Profile } from "./profile";
@@ -15,6 +13,15 @@ import { Wishlist } from "./wishlist";
 import { Categories } from "./categories";
 import { Product, ProductItem } from "./product";
 import { NotFound } from "./error";
+import { Dashboard } from "./dashboard";
+import { OrderAdmin } from "../components/OrderAdmin";
+import { ProductAdmin } from "../components/ProductAdmin";
+import { UserAdmin } from "../components/UserAdmin";
+import { CategorieAdmin } from "../components/CategorieAdmin";
+import { BrandAdmin } from "../components/BrandAdmin";
+import { AddCategorie } from "../components/AddCategorie";
+import { AddBrand } from "../components/AddBrand";
+import { AddProduct } from "../components/AddProduct";
 
 export const Router = () => {
   return (
@@ -39,6 +46,19 @@ export const Router = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/order-history" element={<OrderHistory />} />
+          <Route path="/admin" element={<Dashboard />}>
+            <Route path="order" element={<OrderAdmin />} />
+            <Route path="product" element={<ProductAdmin />}>
+              <Route path="add" element={<AddProduct />} />
+            </Route>
+            <Route path="user" element={<UserAdmin />} />
+            <Route path="categorie" element={<CategorieAdmin />}>
+              <Route path="add" element={<AddCategorie />} />
+            </Route>
+            <Route path="brand" element={<BrandAdmin />}>
+              <Route path="add" element={<AddBrand />} />
+            </Route>
+          </Route>
 
           {/* not found */}
           <Route path="*" element={<NotFound />} />

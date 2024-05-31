@@ -14,6 +14,7 @@ import { Cart } from "./cart";
 import { Wishlist } from "./wishlist";
 import { Categories } from "./categories";
 import { Product, ProductItem } from "./product";
+import { NotFound } from "./error";
 
 export const Router = () => {
   return (
@@ -40,7 +41,7 @@ export const Router = () => {
           <Route path="/order-history" element={<OrderHistory />} />
 
           {/* not found */}
-          <Route path="*" element={<Missing />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

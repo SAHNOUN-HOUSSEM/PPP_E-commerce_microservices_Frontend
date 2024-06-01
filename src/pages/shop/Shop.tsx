@@ -48,10 +48,36 @@ export function Shop() {
     setTotalPrice(total);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("quatity", quantity);
     //post to order serice with quantity
+
+    const orderItemsList = Object.entries(quantity).map(([id, qty]) => ({
+      id: parseInt(id, 10),
+      quantity: qty,
+    }));
+
+    const orderRequest = { orderItemsList };
+    console.log("orderRequest", orderRequest);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8083/orders",
+        orderRequest,
+        {
+          headers: {
+            Authorization:
+              "Bearer " +
+              "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjU1Miwic3ViIjoieHl6dCIsImlhdCI6MTcxNzI2MDU5MywiZXhwIjoxNzE3Mjc0OTkzfQ._UznCy2do-issY_GO1_CtTxIvAVGM8qb9qoYeh7DOaM",
+          },
+        }
+      );
+      console.log("response for orders", response);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+
     setOpen(false);
     clearCart();
     setCartItems([]);

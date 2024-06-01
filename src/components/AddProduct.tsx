@@ -25,7 +25,7 @@ export const AddProduct = () => {
     });
 
     axios.get("http://localhost:8083/brand").then((response) => {
-      setBrands(response.data);
+      setBrands(response.data.content);
     });
   }, []);
 

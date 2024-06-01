@@ -70,7 +70,6 @@ export function Product() {
     const productElement = target.closest(".product");
     if (productElement) {
       const productId = productElement.getAttribute("data-id");
-      // console.log(productId);
       navigate("/categorie/" + id + "/products/" + productId);
     }
   };

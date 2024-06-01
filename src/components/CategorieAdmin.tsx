@@ -13,11 +13,11 @@ export const CategorieAdmin = () => {
 
   return (
     <div>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <div className="relative overflow-x-auto sm:rounded-lg bg-white flex justify-end">
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg bg-gray-800 dark:bg-gray-800">
+        <div className="relative overflow-x-auto sm:rounded-lg bg-white flex justify-end dark:bg-gray-800 ">
           <Link
             to="add"
-            className="bg-gray-800 text-white px-4 py-2 rounded-md mt-4 mb-4 hover:bg-gray-700"
+            className="bg-gray-800 text-white px-4 py-2 rounded-md mt-4 mb-4 hover:bg-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white border-gray-500 border-2 mr-4"
           >
             Add New categorie
           </Link>

@@ -7,6 +7,7 @@ export const ProductAdmin = () => {
 
   useEffect(() => {
     axios.get("http://localhost:8083/product").then((response) => {
+      console.log("response from product admin", response.data);
       setProducts(response.data);
     });
   }, []);

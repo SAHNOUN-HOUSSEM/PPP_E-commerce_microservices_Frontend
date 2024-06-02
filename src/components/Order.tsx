@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export const OrderAdmin = () => {
+export const Order = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -35,19 +35,19 @@ export const OrderAdmin = () => {
           </thead>
           <tbody>
             {orders.map((order) =>
-              Object.entries(order.products).map(
+              Object.entries(order?.products).map(
                 ([productName, quantity], index) => (
                   <tr
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                    key={`${order.id}-${index}`}
+                    key={`${order?.id}-${index}`}
                   >
                     {index === 0 && (
                       <th
                         scope="row"
                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        rowSpan={Object.keys(order.products).length}
+                        rowSpan={Object.keys(order?.products).length}
                       >
-                        {order.orderID}
+                        {order?.orderID}
                       </th>
                     )}
                     <td className="px-6 py-4">{productName}</td>

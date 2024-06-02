@@ -6,6 +6,8 @@ export function Product() {
   const { id } = useParams();
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(0);
+  const [sort, setSort] = useState("price");
+  const [name, setName] = useState("");
   const navigate = useNavigate();
 
   const handleCLick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -19,12 +21,14 @@ export function Product() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8083/category/${id}/products?page=${page}&size=10`)
+      .get(
+        `http://localhost:8083/category/${id}/products?page=${page}&size=10&sortBy=${sort}&search=${name}`
+      )
       .then((res) => {
         console.log(res.data);
         setProducts(res.data);
       });
-  }, [page]);
+  }, [sort, name, page]);
 
   return (
     <div className="bg-white">
@@ -33,46 +37,36 @@ export function Product() {
         <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">
           Products
         </h2>
-        <div className="flex flex-row">
-          <div className="flex-grow mb-4 mt-4">
-            <form>
-              <div className="relative">
-                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                  <svg
-                    className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />
-                  </svg>
-                </div>
-                <input
-                  type="search"
-                  id="default-search"
-                  className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Search Mockups, Logos..."
-                  required
-                />
-                <button
-                  type="submit"
-                  className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Search
-                </button>
-              </div>
-            </form>
+
+        <div className="mb-4 mt-4">
+          <div className="flex flex-row gap-2">
+            <div>
+              <select
+                value={sort}
+                className=" w-40 px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md"
+                onChange={(e) => setSort(e.target.value)}
+              >
+                <option value="name">Sort by Name</option>
+                <option value="price">Sort by Price</option>
+              </select>
+            </div>
+
+            <div>
+              <input
+                value={name}
+                type="text"
+                className="w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md"
+                placeholder="Enter product name"
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <button className="px-4 py-2 mt-2 text-white bg-gray-800 rounded-md">
+              Search
+            </button>
           </div>
-          {/* <div className="flex-grow">2</div>
-          <div className="flex-grow">3</div> */}
         </div>
+
         <div
           className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8"
           onClick={handleCLick}

@@ -1,8 +1,8 @@
 import { Fragment, useContext } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Button, Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
-import { CartContext } from "../context";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { AuthContext, CartContext } from "../context";
 import { Shop } from "../pages/shop";
 
 const user = {
@@ -17,11 +17,6 @@ const navigation = [
   { name: "About Us", href: "about-us", current: false },
   { name: "Contact Us", href: "contact-us", current: false },
 ];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -29,6 +24,14 @@ function classNames(...classes: string[]) {
 
 export function Navbar() {
   const { cart, setOpen } = useContext(CartContext);
+  const navigate = useNavigate();
+  const { auth, setAuth } = useContext(AuthContext);
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    setAuth({ role: "", token: "", username: "" });
+    navigate("/");
+  };
 
   return (
     <>
@@ -55,6 +58,18 @@ export function Navbar() {
                             {item.name}
                           </Link>
                         ))}
+                        {auth?.role === "ADMIN" && (
+                          <Link
+                            to={"/admin"}
+                            key={"Admin"}
+                            className={classNames(
+                              "text-gray-300 hover:bg-gray-700 hover:text-white",
+                              "rounded-md px-3 py-2 text-sm font-medium"
+                            )}
+                          >
+                            Dashboard
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -95,61 +110,81 @@ export function Navbar() {
                       {/* here the notification and the badge of the admin if exist */}
 
                       {/* notification button  */}
-                      <button
+                      {/* <button
                         type="button"
                         className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                       >
                         <span className="absolute -inset-1.5" />
                         <span className="sr-only">View notifications</span>
                         <BellIcon className="h-6 w-6" aria-hidden="true" />
-                      </button>
+                      </button> */}
 
                       {/* Profile dropdown */}
+                      {auth?.username ? (
+                        <Menu as="div" className="relative ml-3">
+                          <div>
+                            <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                              <span className="absolute -inset-1.5" />
+                              <span className="sr-only">Open user menu</span>
+                              <img
+                                className="h-8 w-8 rounded-full"
+                                src={user.imageUrl}
+                                alt=""
+                              />
+                              {auth?.role === "ADMIN" && (
+                                <span className="inline-flex items-center rounded-md bg-gray-900 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10 ml-2">
+                                  Admin
+                                </span>
+                              )}
+                            </Menu.Button>
+                          </div>
 
-                      <Menu as="div" className="relative ml-3">
-                        <div>
-                          <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                            <span className="absolute -inset-1.5" />
-                            <span className="sr-only">Open user menu</span>
-                            <img
-                              className="h-8 w-8 rounded-full"
-                              src={user.imageUrl}
-                              alt=""
-                            />
-                            <span className="inline-flex items-center rounded-md bg-gray-900 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10 ml-2">
-                              Admin
-                            </span>
-                          </Menu.Button>
-                        </div>
-
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            {userNavigation.map((item) => (
-                              <Menu.Item key={item.name}>
-                                {({ active }) => (
-                                  <a
-                                    href={item.href}
-                                    className={classNames(
-                                      active ? "bg-gray-100" : "",
-                                      "block px-4 py-2 text-sm text-gray-700"
-                                    )}
-                                  >
-                                    {item.name}
-                                  </a>
-                                )}
+                          <Transition
+                            as={Fragment}
+                            enter="transition ease-out duration-100"
+                            enterFrom="transform opacity-0 scale-95"
+                            enterTo="transform opacity-100 scale-100"
+                            leave="transition ease-in duration-75"
+                            leaveFrom="transform opacity-100 scale-100"
+                            leaveTo="transform opacity-0 scale-95"
+                          >
+                            <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                              <Menu.Item key={"Your Profile"}>
+                                <NavLink
+                                  to={"/profile"}
+                                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                                >
+                                  {"Your Profile"}
+                                </NavLink>
                               </Menu.Item>
-                            ))}
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
+                              <Menu.Item key={"Settings"}>
+                                <NavLink
+                                  to={"/profile"}
+                                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                                >
+                                  {"Settings"}
+                                </NavLink>
+                              </Menu.Item>
+                              <Menu.Item key={"Sign out"}>
+                                <Button
+                                  style={{ width: "100%", textAlign: "left" }}
+                                  onClick={handleSignOut}
+                                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                                >
+                                  {"Sign out"}
+                                </Button>
+                              </Menu.Item>
+                            </Menu.Items>
+                          </Transition>
+                        </Menu>
+                      ) : (
+                        <Link
+                          to="/login"
+                          className="relative rounded bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 "
+                        >
+                          <span>Login</span>
+                        </Link>
+                      )}
                     </div>
                   </div>
                   <div className="-mr-2 flex md:hidden">
@@ -191,6 +226,11 @@ export function Navbar() {
                       {item.name}
                     </Disclosure.Button>
                   ))}
+                  <Button>
+                    <Link to={"/admin"} key={"Admin"}>
+                      Dashboard
+                    </Link>
+                  </Button>
                 </div>
                 <div className="border-t border-gray-700 pb-3 pt-4">
                   <div className="flex items-center px-5">
@@ -242,16 +282,29 @@ export function Navbar() {
                     </button>
                   </div>
                   <div className="mt-3 space-y-1 px-2">
-                    {userNavigation.map((item) => (
-                      <Disclosure.Button
-                        key={item.name}
-                        as="a"
-                        href={item.href}
-                        className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-                      >
-                        {item.name}
-                      </Disclosure.Button>
-                    ))}
+                    <Button
+                      key={"Your Profile"}
+                      as="a"
+                      href={"/profile"}
+                      className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                    >
+                      {"Your Profile"}
+                    </Button>
+                    <Button
+                      key={"Settings"}
+                      as="a"
+                      href={"/profile"}
+                      className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                    >
+                      {"Settings"}
+                    </Button>
+                    <Button
+                      key={"Sign out"}
+                      onClick={handleSignOut}
+                      className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                    >
+                      {"Sign out"}
+                    </Button>
                   </div>
                 </div>
               </Disclosure.Panel>

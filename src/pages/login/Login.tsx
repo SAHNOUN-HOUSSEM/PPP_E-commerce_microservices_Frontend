@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,6 +9,7 @@ import { AuthContext } from "../../context";
 const Login = () => {
   const { setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const loginSchema = yup.object().shape({
     username: yup.string().required("Username is required"),
@@ -35,13 +36,21 @@ const Login = () => {
         loginData
       );
       console.log(response.data);
-      localStorage.setItem("token", response.data.token);
+      const from =
+        location.state?.from?.pathname || response.data.role === "ADMIN"
+          ? "/admin"
+          : "/";
       setAuth({
         username: response.data.username,
         token: response.data.token,
         role: response.data.role,
       });
-      navigate("/");
+
+      console.log(response.data.token);
+
+      localStorage.setItem("token", response.data.token);
+
+      navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
     }

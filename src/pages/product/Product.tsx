@@ -21,8 +21,8 @@ export function Product() {
     axios
       .get(`http://localhost:8083/category/${id}/products?page=${page}&size=10`)
       .then((res) => {
-        setProducts(res.data);
         console.log(res.data);
+        setProducts(res.data);
       });
   }, [page]);
 

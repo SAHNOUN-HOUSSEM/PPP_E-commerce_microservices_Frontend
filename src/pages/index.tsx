@@ -22,6 +22,8 @@ import { BrandAdmin } from "../components/BrandAdmin";
 import { AddCategorie } from "../components/AddCategorie";
 import { AddBrand } from "../components/AddBrand";
 import { AddProduct } from "../components/AddProduct";
+import { Unauthorized } from "./unauthorized";
+import { RequireAuth } from "../components";
 
 export const Router = () => {
   return (
@@ -32,6 +34,7 @@ export const Router = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Resgister />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
           <Route path="/shop" element={<Shop />} />
           <Route path="/categorie" element={<Categories />} />
@@ -42,21 +45,31 @@ export const Router = () => {
           <Route path="/contact-us" element={<ContactUs />} />
 
           {/* private routes */}
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/order-history" element={<OrderHistory />} />
-          <Route path="/admin" element={<Dashboard />}>
-            <Route path="order" element={<OrderAdmin />} />
-            <Route path="product" element={<ProductAdmin />}>
-              <Route path="add" element={<AddProduct />} />
-            </Route>
-            <Route path="user" element={<UserAdmin />} />
-            <Route path="categorie" element={<CategorieAdmin />}>
-              <Route path="add" element={<AddCategorie />} />
-            </Route>
-            <Route path="brand" element={<BrandAdmin />}>
-              <Route path="add" element={<AddBrand />} />
+
+          <Route element={<RequireAuth allowedRoles={["ADMIN", "USER"]} />}>
+            <Route
+              path="/profile"
+              element={<p className="mt-5 p-5">Profile</p>}
+            />
+            {/* <Route path="/profile" element={<Profile />} /> */}
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/order-history" element={<OrderHistory />} />
+          </Route>
+
+          <Route element={<RequireAuth allowedRoles={["ADMIN"]} />}>
+            <Route path="/admin" element={<Dashboard />}>
+              <Route path="order" element={<OrderAdmin />} />
+              <Route path="product" element={<ProductAdmin />}>
+                <Route path="add" element={<AddProduct />} />
+              </Route>
+              <Route path="user" element={<UserAdmin />} />
+              <Route path="categorie" element={<CategorieAdmin />}>
+                <Route path="add" element={<AddCategorie />} />
+              </Route>
+              <Route path="brand" element={<BrandAdmin />}>
+                <Route path="add" element={<AddBrand />} />
+              </Route>
             </Route>
           </Route>
 

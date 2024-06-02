@@ -1,15 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { EMAIL_REGEX } from "../../util/emailRegex";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
+import { useContext } from "react";
+import { AuthContext } from "../../context";
 
 const Login = () => {
+  const { setAuth } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const loginSchema = yup.object().shape({
-    email: yup
-      .string()
-      .matches(EMAIL_REGEX, "Please enter a valid email address")
-      .required("Email is required"),
+    username: yup.string().required("Username is required"),
     password: yup
       .string()
       .min(8, "Password must be at least 8 characters")
@@ -21,9 +23,28 @@ const Login = () => {
     mode: "onBlur",
   });
 
-  const onSubmit = (data) => {
-    // alert(JSON.stringify(data));
+  const onSubmit = async (data) => {
     console.log(data);
+    const loginData = {
+      username: data.username,
+      password: data.password,
+    };
+    try {
+      const response = await axios.post(
+        "http://localhost:8083/auth/login",
+        loginData
+      );
+      console.log(response.data);
+      localStorage.setItem("token", response.data.token);
+      setAuth({
+        username: response.data.username,
+        token: response.data.token,
+        role: response.data.role,
+      });
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -43,22 +64,22 @@ const Login = () => {
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label
-              htmlFor="email"
+              htmlFor="username"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Email address
+              Username
             </label>
             <div className="mt-2">
               <Controller
-                name="email"
+                name="username"
                 control={control}
                 render={({ field, fieldState }) => (
                   <div>
                     <input
                       {...field}
-                      id="email"
-                      type="email"
-                      autoComplete="email"
+                      id="username"
+                      type="text"
+                      autoComplete="username"
                       required
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />

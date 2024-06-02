@@ -4,16 +4,21 @@ import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { EMAIL_REGEX } from "../../util/emailRegex";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Resgister = () => {
+  const navigate = useNavigate();
+
   const registerSchema = yup.object().shape({
     first_name: yup.string().required("First name is required"),
     last_name: yup.string().required("Last name is required"),
     phone: yup
       .string()
       .matches(
-        /^[0-9]{2}-[0-9]{3}-[0-9]{3}$/,
-        "Phone number must be in the format 12-345-678"
+        //regex for phone number with 8 numbers
+        /^(\d{8})$/,
+        "Phone number must contain 8 numbers"
       )
       .required("Phone number is required"),
     username: yup.string().required("Username is required"),
@@ -37,8 +42,26 @@ const Resgister = () => {
     mode: "onBlur",
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
+    const registerData = {
+      username: data.username,
+      password: data.password,
+      firstName: data.first_name,
+      lastName: data.last_name,
+      email: data.email,
+      role: "USER",
+    };
+    try {
+      const response = await axios.post(
+        "http://localhost:8083/auth/register",
+        registerData
+      );
+      console.log(response.data);
+      navigate("/login");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

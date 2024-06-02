@@ -87,7 +87,7 @@ export const AddProduct = () => {
                     onSubmit={handleSubmit(onSubmit)}
                   >
                     <h1 className="text-2xl font-bold text-gray-800">
-                      Add Categorie
+                      Add Product
                     </h1>
                     <div className="flex flex-col space-y-2">
                       <label

@@ -69,14 +69,17 @@ export const ProductAdmin = () => {
                 <td className="px-6 py-4">{product.brand.name}</td>
                 <td className="flex items-center px-6 py-4">
                   <Link
-                    to={`${product.id}`}
+                    to={`edit/${product.id}`}
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                   >
                     Edit
                   </Link>
-                  <button className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">
+                  <Link
+                    to={`delete/${product.id}`}
+                    className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
+                  >
                     Remove
-                  </button>
+                  </Link>
                 </td>
               </tr>
             ))}

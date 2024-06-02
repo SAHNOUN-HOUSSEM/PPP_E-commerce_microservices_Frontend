@@ -22,6 +22,8 @@ import { BrandAdmin } from "../components/BrandAdmin";
 import { AddCategorie } from "../components/AddCategorie";
 import { AddBrand } from "../components/AddBrand";
 import { AddProduct } from "../components/AddProduct";
+import { EditProduct } from "../components/EditProduct";
+import { DeleteProduct } from "../components/DeleteProduct";
 
 export const Router = () => {
   return (
@@ -50,6 +52,8 @@ export const Router = () => {
             <Route path="order" element={<OrderAdmin />} />
             <Route path="product" element={<ProductAdmin />}>
               <Route path="add" element={<AddProduct />} />
+              <Route path="edit/:id" element={<EditProduct />} />
+              <Route path="delete/:id" element={<DeleteProduct />} />
             </Route>
             <Route path="user" element={<UserAdmin />} />
             <Route path="categorie" element={<CategorieAdmin />}>

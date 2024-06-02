@@ -1,13 +1,11 @@
 import axios from "axios";
-import React from "react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
 export const OrderAdmin = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8081/orders").then((response) => {
+    axios.get("http://localhost:8083/orders").then((response) => {
       console.log("response from order admin", response.data);
       setOrders(response.data);
     });

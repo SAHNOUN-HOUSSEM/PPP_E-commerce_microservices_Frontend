@@ -165,7 +165,7 @@ export const AddProduct = () => {
                             <input
                               {...field}
                               id="price"
-                              type="number"
+                              type="text"
                               placeholder="Price"
                               className="w-full p-2 border border-gray-300 rounded-md"
                               required={true}

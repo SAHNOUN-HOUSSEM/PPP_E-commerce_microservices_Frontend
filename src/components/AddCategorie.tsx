@@ -3,24 +3,32 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { Fragment, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, set, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
 export const AddCategorie = () => {
   const [open, setOpen] = useState(true);
+  const [file, setFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
+
   const navigate = useNavigate();
 
   const handleClose = () => {
     setOpen(false);
-    // navigate(-1);
     navigate("/admin/categorie");
   };
 
   const formSchema = yup.object().shape({
     name: yup.string().required("Name is required"),
     description: yup.string().required("Description is required"),
-    image: yup.string().required("Image is required"),
+    image: yup.mixed(), //.required("Image is required"),
   });
 
   const { handleSubmit, control } = useForm({
@@ -28,12 +36,27 @@ export const AddCategorie = () => {
     mode: "onBlur",
   });
 
-  const onSubmit = (data) => {
-    // console.log(data);
-    axios.post("http://localhost:8083/category", data).then((res) => {
-      console.log(res);
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    if (file) {
+      formData.append("image", file);
+    }
+    try {
+      axios.post("http://localhost:8083/category", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       handleClose();
-    });
+    } catch (err) {
+      console.error("Error submitting form", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -86,7 +109,6 @@ export const AddCategorie = () => {
                               type="text"
                               placeholder="Name"
                               className="w-full p-2 border border-gray-300 rounded-md"
-                              required={true}
                             />
                             {fieldState.error && (
                               <p className="text-red-500 text-sm">
@@ -116,7 +138,6 @@ export const AddCategorie = () => {
                               name="description"
                               placeholder="Description"
                               className="w-full p-2 border border-gray-300 rounded-md"
-                              required={true}
                             />
                             {fieldState.error && (
                               <p className="text-red-500 text-sm">
@@ -145,7 +166,7 @@ export const AddCategorie = () => {
                               type="file"
                               placeholder="Image"
                               className="w-full p-2 border border-gray-300 rounded-md"
-                              required={true}
+                              onChange={handleFileChange}
                             />
                             {fieldState.error && (
                               <p className="text-red-500 text-sm">
@@ -163,6 +184,7 @@ export const AddCategorie = () => {
                         className="w-full p-2 text-white 
                         bg-gray-800
                         rounded-md"
+                        disabled={isLoading}
                       >
                         Add
                       </button>

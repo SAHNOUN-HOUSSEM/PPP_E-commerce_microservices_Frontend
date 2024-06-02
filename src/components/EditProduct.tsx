@@ -57,9 +57,15 @@ export const EditProduct = () => {
       },
     };
 
-    axios.put("http://localhost:8083/product/" + id, dataToSend).then((res) => {
-      handleClose();
-    });
+    axios
+      .put("http://localhost:8083/product/" + id, dataToSend, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        handleClose();
+      });
   };
 
   return (

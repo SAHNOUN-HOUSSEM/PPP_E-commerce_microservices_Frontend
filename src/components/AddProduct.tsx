@@ -11,6 +11,16 @@ export const AddProduct = () => {
   const [open, setOpen] = useState(true);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+
+  const [file, setFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
+
   const navigate = useNavigate();
 
   const handleClose = () => {
@@ -36,7 +46,7 @@ export const AddProduct = () => {
     quantity: yup.number().required("Quantity is required"),
     category: yup.string().required("Category is required"),
     brand: yup.string().required("Brand is required"),
-    image: yup.string().required("Image is required"),
+    image: yup.string(), //.required("Image is required"),
   });
 
   const { handleSubmit, control } = useForm({
@@ -45,17 +55,31 @@ export const AddProduct = () => {
   });
 
   const onSubmit = (data) => {
-    const dataToSend = {
-      ...data,
-      category: { id: parseInt(data.category) },
-      brand: { id: parseInt(data.brand) },
-    };
-    // console.log(dataToSend);
+    setIsLoading(true);
 
-    axios.post("http://localhost:8083/product", dataToSend).then((res) => {
-      console.log(res);
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("quantity", data.quantity);
+    formData.append("categoryId", data.category);
+    formData.append("brandId", data.brand);
+    if (file) {
+      formData.append("image", file);
+    }
+    try {
+      axios.post("http://localhost:8083/product", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       handleClose();
-    });
+    } catch (err) {
+      console.error("Error submitting form", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -298,7 +322,7 @@ export const AddProduct = () => {
                               type="file"
                               placeholder="Image"
                               className="w-full p-2 border border-gray-300 rounded-md"
-                              required={true}
+                              onChange={handleFileChange}
                             />
                             {fieldState.error && (
                               <p className="text-red-500 text-sm">
@@ -309,13 +333,16 @@ export const AddProduct = () => {
                         )}
                       />
                     </div>
-
+                    {isLoading && (
+                      <p className="text-gray-800 text-sm">Loading...</p>
+                    )}
                     <div className="flex flex-col space-y-2">
                       <button
                         type="submit"
                         className="w-full p-2 text-white 
                         bg-gray-800
                         rounded-md"
+                        disabled={isLoading}
                       >
                         Add
                       </button>

@@ -9,6 +9,9 @@ import * as yup from "yup";
 
 export const AddBrand = () => {
   const [open, setOpen] = useState(true);
+  const [file, setFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleClose = () => {
@@ -16,10 +19,16 @@ export const AddBrand = () => {
     navigate("/admin/brand");
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
+
   const formSchema = yup.object().shape({
     name: yup.string().required("Name is required"),
-    // description: yup.string().required("Description is required"),
-    image: yup.string().required("Image is required"),
+    description: yup.string().required("Description is required"),
+    image: yup.string(), //.required("Image is required"),
   });
 
   const { handleSubmit, control } = useForm({
@@ -28,11 +37,26 @@ export const AddBrand = () => {
   });
 
   const onSubmit = (data) => {
-    // console.log(data);
-    axios.post("http://localhost:8083/brand", data).then((res) => {
-      console.log(res);
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    if (file) {
+      formData.append("image", file);
+    }
+    try {
+      axios.post("http://localhost:8083/brand", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       handleClose();
-    });
+    } catch (err) {
+      console.error("Error submitting form", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -98,6 +122,35 @@ export const AddBrand = () => {
                     </div>
                     <div className="flex flex-col space-y-2">
                       <label
+                        htmlFor="description"
+                        className="text-sm font-semibold text-gray-800"
+                      >
+                        Description
+                      </label>
+
+                      <Controller
+                        name="description"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <div>
+                            <textarea
+                              {...field}
+                              id="description"
+                              name="description"
+                              placeholder="Description"
+                              className="w-full p-2 border border-gray-300 rounded-md"
+                            />
+                            {fieldState.error && (
+                              <p className="text-red-500 text-sm">
+                                {fieldState.error.message}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      />
+                    </div>
+                    <div className="flex flex-col space-y-2">
+                      <label
                         htmlFor="image"
                         className="text-sm font-semibold text-gray-800"
                       >
@@ -114,7 +167,7 @@ export const AddBrand = () => {
                               type="file"
                               placeholder="Image"
                               className="w-full p-2 border border-gray-300 rounded-md"
-                              required={true}
+                              onChange={handleFileChange}
                             />
                             {fieldState.error && (
                               <p className="text-red-500 text-sm">
@@ -132,6 +185,7 @@ export const AddBrand = () => {
                         className="w-full p-2 text-white 
                         bg-gray-800
                         rounded-md"
+                        disabled={isLoading}
                       >
                         Add
                       </button>

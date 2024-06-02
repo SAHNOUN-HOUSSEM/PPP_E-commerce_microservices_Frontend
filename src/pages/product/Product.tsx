@@ -25,6 +25,7 @@ export function Product() {
         `http://localhost:8083/category/${id}/products?page=${page}&size=10&sortBy=${sort}&search=${name}`
       )
       .then((res) => {
+        console.log(res.data);
         setProducts(res.data);
       });
   }, [sort, name, page]);

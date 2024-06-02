@@ -5,10 +5,16 @@ export const Order = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8083/orders").then((response) => {
-      console.log("response from order admin", response.data);
-      setOrders(response.data);
-    });
+    axios
+      .get("http://localhost:8083/orders", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        console.log("response from order admin", response.data);
+        setOrders(response.data);
+      });
   }, []);
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">

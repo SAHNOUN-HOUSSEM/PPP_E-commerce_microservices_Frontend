@@ -13,10 +13,16 @@ export const DeleteProduct = () => {
   };
 
   const deleteProduct = () => {
-    axios.delete(`http://localhost:8083/product/${id}`).then((res) => {
-      console.log(res);
-      handleClose();
-    });
+    axios
+      .delete(`http://localhost:8083/product/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        handleClose();
+      });
     handleClose();
   };
 

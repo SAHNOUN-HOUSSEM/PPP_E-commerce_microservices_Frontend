@@ -22,6 +22,8 @@ import { BrandAdmin } from "../components/BrandAdmin";
 import { AddCategorie } from "../components/AddCategorie";
 import { AddBrand } from "../components/AddBrand";
 import { AddProduct } from "../components/AddProduct";
+import { Unauthorized } from "./unauthorized";
+import { RequireAuth } from "../components";
 import { EditProduct } from "../components/EditProduct";
 import { DeleteProduct } from "../components/DeleteProduct";
 import { UserSetting } from "../components/UserSetting";
@@ -35,6 +37,7 @@ export const Router = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Resgister />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
           <Route path="/shop" element={<Shop />} />
           <Route path="/categorie" element={<Categories />} />

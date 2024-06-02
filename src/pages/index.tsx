@@ -14,7 +14,7 @@ import { Categories } from "./categories";
 import { Product, ProductItem } from "./product";
 import { NotFound } from "./error";
 import { Dashboard } from "./dashboard";
-import { OrderAdmin } from "../components/OrderAdmin";
+import { Order } from "../components/Order";
 import { ProductAdmin } from "../components/ProductAdmin";
 import { UserAdmin } from "../components/UserAdmin";
 import { CategorieAdmin } from "../components/CategorieAdmin";
@@ -24,6 +24,7 @@ import { AddBrand } from "../components/AddBrand";
 import { AddProduct } from "../components/AddProduct";
 import { EditProduct } from "../components/EditProduct";
 import { DeleteProduct } from "../components/DeleteProduct";
+import { UserSetting } from "../components/UserSetting";
 
 export const Router = () => {
   return (
@@ -44,12 +45,15 @@ export const Router = () => {
           <Route path="/contact-us" element={<ContactUs />} />
 
           {/* private routes */}
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<Profile />}>
+            <Route path="order-history" element={<Order />} />
+            <Route path="settings" element={<UserSetting />} />
+          </Route>
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/order-history" element={<OrderHistory />} />
           <Route path="/admin" element={<Dashboard />}>
-            <Route path="order" element={<OrderAdmin />} />
+            <Route path="order" element={<Order />} />
             <Route path="product" element={<ProductAdmin />}>
               <Route path="add" element={<AddProduct />} />
               <Route path="edit/:id" element={<EditProduct />} />

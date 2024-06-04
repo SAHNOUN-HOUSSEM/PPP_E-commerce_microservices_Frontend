@@ -48,26 +48,31 @@ export const Router = () => {
           <Route path="/contact-us" element={<ContactUs />} />
 
           {/* private routes */}
-          <Route path="/profile" element={<Profile />}>
-            <Route path="order-history" element={<Order />} />
-            <Route path="settings" element={<UserSetting />} />
+          <Route element={<RequireAuth allowedRoles={["ADMIN", "USER"]} />}>
+            <Route path="/profile" element={<Profile />}>
+              <Route path="order-history" element={<Order />} />
+              <Route path="settings" element={<UserSetting />} />
+            </Route>
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/order-history" element={<OrderHistory />} />
           </Route>
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/order-history" element={<OrderHistory />} />
-          <Route path="/admin" element={<Dashboard />}>
-            <Route path="order" element={<Order />} />
-            <Route path="product" element={<ProductAdmin />}>
-              <Route path="add" element={<AddProduct />} />
-              <Route path="edit/:id" element={<EditProduct />} />
-              <Route path="delete/:id" element={<DeleteProduct />} />
-            </Route>
-            <Route path="user" element={<UserAdmin />} />
-            <Route path="categorie" element={<CategorieAdmin />}>
-              <Route path="add" element={<AddCategorie />} />
-            </Route>
-            <Route path="brand" element={<BrandAdmin />}>
-              <Route path="add" element={<AddBrand />} />
+
+          <Route element={<RequireAuth allowedRoles={["ADMIN"]} />}>
+            <Route path="/admin" element={<Dashboard />}>
+              <Route path="order" element={<Order />} />
+              <Route path="product" element={<ProductAdmin />}>
+                <Route path="add" element={<AddProduct />} />
+                <Route path="edit/:id" element={<EditProduct />} />
+                <Route path="delete/:id" element={<DeleteProduct />} />
+              </Route>
+              <Route path="user" element={<UserAdmin />} />
+              <Route path="categorie" element={<CategorieAdmin />}>
+                <Route path="add" element={<AddCategorie />} />
+              </Route>
+              <Route path="brand" element={<BrandAdmin />}>
+                <Route path="add" element={<AddBrand />} />
+              </Route>
             </Route>
           </Route>
 

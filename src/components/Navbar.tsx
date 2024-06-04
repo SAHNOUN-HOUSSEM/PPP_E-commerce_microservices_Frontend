@@ -42,6 +42,11 @@ export function Navbar() {
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
+                    <img
+                      src="	https://media.canva.com/v2/image-resize/format:PNG/height:150/quality:100/uri:s3%3A%2F%2Fmedia-private.canva.com%2Fem7nU%2FMAGHE9em7nU%2F1%2Fp.png/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAOgby5JXTk1kc022K4kvT7pl4BSeRbx_FMCADSGgE91A&exp=1717461882&osig=AAAAAAAAAAAAAAAAAAAAAMP0wULd4WffkEzUDPVf9xCC2Xknss07OgzoWTv-c5M6&signer=media-rpc&x-canva-quality=thumbnail"
+                      alt="logo"
+                      className="h-14 w-14"
+                    />
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
                         {navigation.map((item) => (

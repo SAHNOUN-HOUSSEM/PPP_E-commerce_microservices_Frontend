@@ -42,43 +42,72 @@ export const CategorieAdmin = () => {
                 </th>
               </tr>
             </thead>
-            <tbody>
-              {categories.map((categorie) => (
-                <tr
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                  key={categorie.id}
-                >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+
+            {categories?.length === 0 && (
+              <div className="flex items-center justify-center h-32">
+                <h1 className="text-2xl font-semibold text-gray-500 dark:text-gray-400">
+                  No categories found
+                </h1>
+              </div>
+            )}
+            {categories?.length > 0 && (
+              <tbody>
+                {categories.map((categorie) => (
+                  <tr
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                    key={categorie.id}
                   >
-                    {categorie.name}
-                  </th>
-                  <td className="px-6 py-4">{categorie.description}</td>
-                  <td className="px-6 py-4">
-                    {/* {product.quantity} */}
-                    <img
-                      src={categorie.image}
-                      alt={categorie.name}
-                      className="w-10 h-10 rounded-full"
-                    />
-                  </td>
-                  {/* <td className="px-6 py-4">{product.price}</td>
-              <td className="px-6 py-4">{product.brand.name}</td> */}
-                  <td className="flex items-center px-6 py-4">
-                    <Link
-                      to={`${categorie.id}`}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      Edit
-                    </Link>
-                    <button className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">
-                      Remove
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+                      {categorie.name}
+                    </th>
+                    <td className="px-6 py-4">{categorie.description}</td>
+                    <td className="px-6 py-4">
+                      {/* {product.quantity} */}
+                      <img
+                        src={categorie.image}
+                        alt={categorie.name}
+                        className="w-10 h-10 rounded-full"
+                      />
+                    </td>
+
+                    <td className="flex items-center px-6 py-4">
+                      <Link
+                        to={`${categorie.id}`}
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      >
+                        Edit
+                      </Link>
+                      <button
+                        className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
+                        onClick={() => {
+                          axios
+                            .delete(
+                              `http://localhost:8083/category/${categorie.id}`,
+                              {
+                                headers: {
+                                  Authorization: `Bearer ${localStorage.getItem(
+                                    "token"
+                                  )}`,
+                                },
+                              }
+                            )
+                            .then(() => {
+                              setCategories(
+                                categories.filter((c) => c.id !== categorie.id)
+                              );
+                            });
+                        }}
+                      >
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            )}
           </table>
         </div>
       </div>

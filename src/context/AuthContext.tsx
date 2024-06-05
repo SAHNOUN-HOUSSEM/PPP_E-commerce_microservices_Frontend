@@ -1,4 +1,5 @@
-import { createContext, useState } from "react";
+import axios from "axios";
+import { createContext, useEffect, useState } from "react";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -24,6 +25,36 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     token: "",
     role: "",
   });
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const getUserByToken = async () => {
+        try {
+          const payload = { token: token };
+          const response = await axios.post(
+            "http://localhost:8083/auth/me",
+            payload
+          );
+          console.log(response.data);
+          const user = response.data.user;
+          const newToken = response.data.token;
+          console.log(user);
+          console.log(newToken);
+
+          setAuth({
+            username: user.username,
+            role: user.role,
+            token: newToken,
+          });
+        } catch (error) {
+          console.error("Failed to fetch user by token", error);
+          // localStorage.removeItem("token");
+        }
+      };
+      getUserByToken();
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

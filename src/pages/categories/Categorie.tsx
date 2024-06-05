@@ -110,19 +110,14 @@ export const Categories = () => {
   useEffect(() => {
     axios.get("http://localhost:8083/category").then((data) => {
       setCategories(data.data);
+      // setCategories([]);
     });
   }, []);
-
-  // const handleClick = (id: any) => {
-  //   navigate("/categorie/" + id + "/products");
-  // };
-
   const handleCLick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLElement;
     const categoryElement = target.closest(".category");
     if (categoryElement) {
       const categoryId = categoryElement.getAttribute("data-id");
-      // console.log(categoryId);
       navigate("/categorie/" + categoryId + "/products");
     }
   };
@@ -137,31 +132,41 @@ export const Categories = () => {
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
           Categories
         </h2>
-        <div
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 "
-          onClick={handleCLick}
-        >
-          {categories.map((category) => (
+
+        {categories?.length == 0 && (
+          <div className="mt-4 text-center text-gray-700">
+            No categories found
+          </div>
+        )}
+        {categories?.length > 0 && (
+          <>
             <div
-              key={category.id}
-              className="bg-gray-200 rounded-lg overflow-hidden shadow-lg category"
-              data-id={category.id}
-              // onClick={() => handleClick(category.id)}
+              className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 "
+              onClick={handleCLick}
             >
-              <img
-                src={category.image}
-                alt={category.name}
-                className="w-full h-32 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-xl font-semibold text-gray-800">
-                  {category.name}
-                </h3>
-                <p className="text-gray-600 mt-2">{category.description}</p>
-              </div>
+              {categories.map((category) => (
+                <div
+                  key={category.id}
+                  className="bg-gray-200 rounded-lg overflow-hidden shadow-lg category"
+                  data-id={category.id}
+                  // onClick={() => handleClick(category.id)}
+                >
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    className="w-full h-32 object-cover"
+                  />
+                  <div className="p-4">
+                    <h3 className="text-xl font-semibold text-gray-800">
+                      {category.name}
+                    </h3>
+                    <p className="text-gray-600 mt-2">{category.description}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

@@ -40,77 +40,110 @@ export const BrandAdmin = () => {
               </th>
             </tr>
           </thead>
-          <tbody>
-            {brands?.content?.map((brand) => (
-              <tr
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                key={brand.id}
-              >
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+
+          {brands?.content?.length === 0 && (
+            <div className="flex items-center justify-center h-32">
+              <h1 className="text-2xl font-semibold text-gray-500 dark:text-gray-400">
+                No brands found
+              </h1>
+            </div>
+          )}
+
+          {brands?.content?.length > 0 && (
+            <tbody>
+              {brands?.content?.map((brand) => (
+                <tr
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  key={brand.id}
                 >
-                  {brand.name}
-                </th>
-                <td className="px-6 py-4">
-                  {/* {product.quantity} */}
-                  <img
-                    src={brand.image}
-                    alt={brand.name}
-                    className="w-10 h-10 rounded-full"
-                  />
-                </td>
-                <td className="flex items-center px-6 py-4">
-                  <Link
-                    to={`${brand.id}`}
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    Edit
-                  </Link>
-                  <button className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">
-                    Remove
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+                    {brand.name}
+                  </th>
+                  <td className="px-6 py-4">
+                    {/* {product.quantity} */}
+                    <img
+                      src={brand.image}
+                      alt={brand.name}
+                      className="w-10 h-10 rounded-full"
+                    />
+                  </td>
+                  <td className="flex items-center px-6 py-4">
+                    <Link
+                      to={`${brand.id}`}
+                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
+                      onClick={() => {
+                        axios
+                          .delete(`http://localhost:8083/brand/${brand.id}`, {
+                            headers: {
+                              Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                              )}`,
+                            },
+                          })
+                          .then((response) => {
+                            setBrands((prev) => ({
+                              ...prev,
+                              content: prev.content.filter(
+                                (x) => x.id !== brand.id
+                              ),
+                            }));
+                          });
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
       </div>
-      <div className="flex flex-row items-center justify-between mt-4">
-        <span className="text-sm text-gray-400 ml-2">
-          Page{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            {page + 1}
-          </span>{" "}
-          of{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            {brands?.totalPages}
-          </span>{" "}
-          of{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            {brands?.totalElements}
-          </span>{" "}
-          Brands
-        </span>
-        <div className="inline-flex mt-2 xs:mt-0 mb-2 border-gray-500 border-2 rounded-md mr-4">
-          <button
-            className={`flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 rounded-s hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
-            onClick={() => {
-              if (page > 0) setPage((prev) => prev - 1);
-            }}
-            disabled={page === 0}
-          >
-            Prev
-          </button>
-          <button
-            onClick={() => setPage((prev) => prev + 1)}
-            className={`flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white `}
-            disabled={page === brands?.totalPages - 1}
-          >
-            Next
-          </button>
+      {brands?.content?.length > 0 && (
+        <div className="flex flex-row items-center justify-between mt-4">
+          <span className="text-sm text-gray-400 ml-2">
+            Page{" "}
+            <span className="font-semibold text-gray-900 dark:text-white">
+              {page + 1}
+            </span>{" "}
+            of{" "}
+            <span className="font-semibold text-gray-900 dark:text-white">
+              {brands?.totalPages}
+            </span>{" "}
+            of{" "}
+            <span className="font-semibold text-gray-900 dark:text-white">
+              {brands?.totalElements}
+            </span>{" "}
+            Brands
+          </span>
+          <div className="inline-flex mt-2 xs:mt-0 mb-2 border-gray-500 border-2 rounded-md mr-4">
+            <button
+              className={`flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 rounded-s hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+              onClick={() => {
+                if (page > 0) setPage((prev) => prev - 1);
+              }}
+              disabled={page === 0}
+            >
+              Prev
+            </button>
+            <button
+              onClick={() => setPage((prev) => prev + 1)}
+              className={`flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white `}
+              disabled={page === brands?.totalPages - 1}
+            >
+              Next
+            </button>
+          </div>
         </div>
-      </div>
+      )}
       <Outlet />
     </div>
   );

@@ -3,13 +3,21 @@ import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context";
+import { Toast } from "../../components/Toast";
 
 const Login = () => {
-  const { setAuth } = useContext(AuthContext);
+  const { auth, setAuth } = useContext(AuthContext);
+  // const [error, setError] = useState("");
+  const [submition, setSubmition] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    // console.log(auth);
+    if (auth.token) navigate("/profile");
+  }, [auth]);
 
   const loginSchema = yup.object().shape({
     username: yup.string().required("Username is required"),
@@ -25,7 +33,7 @@ const Login = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     const loginData = {
       username: data.username,
       password: data.password,
@@ -35,35 +43,34 @@ const Login = () => {
         "http://localhost:8083/auth/login",
         loginData
       );
-      console.log(response.data);
+
       const from =
-        location.state?.from?.pathname || response.data.role === "ADMIN"
+        location.state?.from?.pathname && response.data.role === "ADMIN"
           ? "/admin"
-          : "/";
+          : location.state?.from?.pathname;
       setAuth({
         username: response.data.username,
         token: response.data.token,
         role: response.data.role,
       });
 
-      console.log(response.data.token);
+      // console.log(response.data.token);
 
       localStorage.setItem("token", response.data.token);
 
       navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
+      setSubmition(true);
     }
   };
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      {submition && (
+        <Toast message="Invalid username or password" type="error" />
+      )}
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          className="mx-auto h-10 w-auto"
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          alt="Your Company"
-        />
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sign in to your account
         </h2>

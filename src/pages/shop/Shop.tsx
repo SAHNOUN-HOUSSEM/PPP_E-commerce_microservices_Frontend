@@ -48,11 +48,35 @@ export function Shop() {
     setTotalPrice(total);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("quatity", quantity);
     //post to order serice with quantity
-    setOpen(false);
+    const orderItemsList = Object.entries(quantity).map(([id, quantity]) => ({
+      id: parseInt(id, 10),
+      quantity,
+    }));
+
+    const orderData = { orderItemsList };
+
+    // console.log("orderData", orderData);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8083/orders",
+        orderData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log("Order placed: ", response.data);
+    } catch (err) {
+      console.log("Error placing order: ", err);
+    }
+
     clearCart();
     setCartItems([]);
     setTotalPrice(0);
